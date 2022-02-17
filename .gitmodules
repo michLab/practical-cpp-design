@@ -1,0 +1,3 @@
+[submodule "resources/practical-cplusplus-design"]
+	path = resources/practical-cplusplus-design
+	url = https://github.com/michLab/practical-cplusplus-design.git
