@@ -31,5 +31,11 @@
             "command": "make clean",
             "problemMatcher": "$gcc"
         },
+        {
+            "label": "format",
+            "type": "shell",
+            "command": "files=$(find ${workspaceFolder}/src/ -type f ! -name '*.pro') && clang-format-6.0 -i $files -style=file",
+            "problemMatcher": "$gcc"
+        },
     ]
 }
