@@ -1,3 +1,5 @@
 #include "Stack.h"
 
-namespace pdCalc {}
+namespace pdCalc
+{
+}

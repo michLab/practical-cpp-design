@@ -4,12 +4,29 @@
 #include <cstddef>
 #include <memory>
 #include <vector>
+#include "../utilities/Publisher.h"
 
-namespace pdCalc {
-class Stack {
+namespace pdCalc
+{
+class StackEventData : public EventData
+{
+  public:
+    enum class ErrorConditions { Empty, TooFewArguments };
+    explicit StackEventData(ErrorConditions e) : err_(e){};
+
+    static const char* Message(ErrorConditions ec);
+    const char* message() const;
+    ErrorConditions error() const { return err_; }
+
+  private:
+    ErrorConditions err_;
+};
+
+class Stack : private Publisher
+{
     class StackImpl;
 
-   public:
+  public:
     static Stack& Instance();
     void push(double);
     double pop();
@@ -17,7 +34,7 @@ class Stack {
     void getElements(size_t n, std::vector<double>&) const;
     std::vector<double> getElements(size_t n);
 
-   private:
+  private:
     Stack();
     ~Stack();
 
