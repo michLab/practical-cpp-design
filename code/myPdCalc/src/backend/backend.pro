@@ -1,9 +1,9 @@
 HOME =../../
-include($$HOME / common.pri) 
+include($$HOME/common.pri) 
 TEMPLATE = lib 
 TARGET = pdCalcBackend 
 DEPENDPATH += .
-INCLUDEPATH += .$$HOME/src
+INCLUDEPATH += . $$HOME/src
 unix:DESTDIR = $$HOME/lib
 
 HEADERS += Stack.h

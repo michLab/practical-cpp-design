@@ -16,7 +16,7 @@ using std::string;
 using std::unique_ptr;
 using std::vector;
 
-namespace pdCal
+namespace pdCalc
 {
 class Publisher::PublisherImpl
 {
@@ -36,20 +36,19 @@ class Publisher::PublisherImpl
     set<string> listEvents() const;
     set<string> listEventObservers(const string& eventName) const;
 
-    Events::const_iterator findCheckedEvent(const string& eventName);
+    Events::const_iterator findCheckedEvent(const string& eventName) const;
     Events::iterator findCheckedEvent(const string& eventName);
 
-    prrivate : Events events_;
-}
+  private:
+    Events events_;
+};
 
-Publisher::PublisherImpl::PublisherImpl()
-{
-}
+Publisher::PublisherImpl::PublisherImpl() {}
 
 Publisher::PublisherImpl::~PublisherImpl() {}
 
 Publisher::PublisherImpl::Events::const_iterator
-Publisher::PublisherImpl::findCheckedEvent(const string& eventName)
+Publisher::PublisherImpl::findCheckedEvent(const string& eventName) const
 {
     auto ev = events_.find(eventName);
     if (ev == events_.end()) {
@@ -91,24 +90,24 @@ unique_ptr<Observer> Publisher::PublisherImpl::detach(
     auto ev = findCheckedEvent(eventName);
     auto& obsList = ev->second;
 
-    auto obs = obsList.find(observer->name());
+    auto obs = obsList.find(observerName);
     if (obs == obsList.end()) {
         throw Exception("Cannot detach observer because observer not found");
     }
     auto tmp = std::move(obs->second);
-    obs.List.erase(obs)
+    obsList.erase(obs);
 
-        return tmp;
+    return tmp;
 }
 
 void Publisher::PublisherImpl::notify(const string& eventName,
                                       shared_ptr<EventData> d)
 {
-    auto ev = findCheckedEvent();
+    auto ev = findCheckedEvent(eventName);
     auto& obsList = ev->second;
 
     for (const auto& obs : obsList) {
-        obs->second->notify(d);
+        obs.second->notify(d);
     }
 }
 
@@ -118,13 +117,13 @@ void Publisher::PublisherImpl::registerEvent(const std::string& eventName)
     if (i != events_.end()) {
         throw Exception("Event already registred");
     }
-    events_[eventName] = ObserverList();
+    events_[eventName] = ObserversList();
 }
 
 void Publisher::PublisherImpl::registerEvents(
     const std::vector<std::string>& eventNames)
 {
-    for (auto i : evenNames) {
+    for (auto i : eventNames) {
         registerEvent(i);
     }
 }
@@ -150,47 +149,47 @@ set<string> Publisher::PublisherImpl::listEventObservers(
     return tmp;
 }
 
-Publisher::Publisher() { publisherImpl = std::make_unique<PublisherImpl>(); }
+Publisher::Publisher() { publisherImpl_ = std::make_unique<PublisherImpl>(); }
 
 Publisher::~Publisher() {}
 
 void Publisher::attach(const std::string& eventName,
                        std::unique_ptr<Observer> observer)
 {
-    publisherImpl->attach(eventName, std::move(observer));
+    publisherImpl_->attach(eventName, std::move(observer));
 }
 
 std::unique_ptr<Observer> Publisher::detach(const std::string& eventName,
                                             const std::string& observerName)
 {
-    return publisherImpl->detach(eventName, observerName);
+    return publisherImpl_->detach(eventName, observerName);
 }
 
 std::set<std::string> Publisher::listEvents() const
 {
-    return publisherImpl->listEvents();
+    return publisherImpl_->listEvents();
 }
 
 std::set<std::string> Publisher::listEventObservers(
     const std::string& eventName) const
 {
-    return publisherImpl->listEventObservers();
+    return publisherImpl_->listEventObservers(eventName);
 }
 
 void Publisher::raise(const std::string& eventName,
                       std::shared_ptr<EventData> d) const
 {
-    publisherImpl->notify(eventName, d);
+    publisherImpl_->notify(eventName, d);
 }
 
 void Publisher::registerEvent(const std::string& eventName)
 {
-    publisherImpl->registerEvent(eventName);
+    publisherImpl_->registerEvent(eventName);
 }
 
 void Publisher::registerEvents(const std::vector<std::string>& eventNames)
 {
-    publisherImpl->registerEvents(eventNames);
+    publisherImpl_->registerEvents(eventNames);
 }
 
-}  // namespace pdCal
+}  // namespace pdCalc

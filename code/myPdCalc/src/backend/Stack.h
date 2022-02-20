@@ -28,9 +28,9 @@ class Stack : private Publisher
 
   public:
     static Stack& Instance();
-    void push(double);
-    double pop();
-    void swapPop();
+    void push(double, bool suppressChangeEvent = false);
+    double pop(bool suppressChangeEvent = false);
+    void swapTop();
     void getElements(size_t n, std::vector<double>&) const;
     std::vector<double> getElements(size_t n);
 

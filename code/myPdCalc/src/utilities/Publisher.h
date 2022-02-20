@@ -12,6 +12,7 @@
 #include <memory>
 #include <set>
 #include <string>
+#include <vector>
 
 namespace pdCalc
 {
@@ -46,6 +47,6 @@ class Publisher
 
   private:
     std::unique_ptr<PublisherImpl> publisherImpl_;
-}
+};
 }  // namespace pdCalc
 #endif
