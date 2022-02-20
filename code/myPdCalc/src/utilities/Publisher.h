@@ -35,7 +35,7 @@ class Publisher
                                      const std::string& observerName);
 
     std::set<std::string> listEvents() const;
-    std::sett<std::string> listEventObservers(
+    std::set<std::string> listEventObservers(
         const std::string& eventName) const;
 
   protected:

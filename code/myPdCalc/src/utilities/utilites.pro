@@ -7,7 +7,8 @@ INCLUDEPATH +=.$$HOME/src
 unix: DESTDIR = $$HOME / lib
 
 HEADERS += Publisher.h \
-    Observer.h
+    Observer.h \
+    Exception.h
 
 SOURCES += Publisher.cpp \
     Observer.cpp

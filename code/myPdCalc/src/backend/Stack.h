@@ -34,11 +34,25 @@ class Stack : private Publisher
     void getElements(size_t n, std::vector<double>&) const;
     std::vector<double> getElements(size_t n);
 
+    using Publisher::attach;
+    using Publisher::detach;
+
+    size_t size() const;
+    void clear() const;
+
+    static const std::string StackChanged;
+    static const std::string StackError;
+
   private:
     Stack();
     ~Stack();
 
     // Appropriate blocking of copying, assign, moving.
+    Stack(const Stack&) = delete;
+    Stack(Stack&&) = delete;
+    Stack& operator=(const Stack&) = delete;
+    Stack& operator=(const Stack&&) = delete;
+
     std::unique_ptr<StackImpl> pimpl_;
 };
 }  // namespace pdCalc
