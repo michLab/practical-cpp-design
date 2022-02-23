@@ -18,4 +18,13 @@ class StackChangedObserver : public pdCalc::Observer
 
   private:
     unsigned int changeCount_;
+};
+
+StackChangedObserver::StackChangedObserver(string name)
+    : pdCalc::Observer(name), changeCount_{0}
+{
+}
+
+void StackChangedObserver::notifyImpl(shared_ptr<pdCalc::EventData>) {
+  changeCount_{0}
 }
