@@ -6,9 +6,8 @@ DEPENDPATH += $$HOME/src/utilities
 INCLUDEPATH += . $$HOME $$HOME/src
 unix:DESTDIR = $$HOME/lib
 
-HEADERS += PublisherObserverTest.h
-
-SOURCES += PublisherObserverTest.cpp
+HEADERS += 
+SOURCES += 
 
 unix:LIBS += -L$$HOME/lib -lpdCalcUtilities
 

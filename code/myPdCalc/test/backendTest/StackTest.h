@@ -10,6 +10,6 @@ class StackTest : public QObject
     void testPushPop();
     void testSwapPop();
     void testErrors();
-}
+};
 
 #endif
