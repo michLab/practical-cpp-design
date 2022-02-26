@@ -25,6 +25,7 @@ StackChangedObserver::StackChangedObserver(string name)
 {
 }
 
-void StackChangedObserver::notifyImpl(shared_ptr<pdCalc::EventData>) {
-  changeCount_ = 0;
+void StackChangedObserver::notifyImpl(shared_ptr<pdCalc::EventData>)
+{
+    changeCount_ = 0;
 }
