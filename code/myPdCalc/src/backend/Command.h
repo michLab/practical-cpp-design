@@ -43,6 +43,33 @@ class Command
     Command& operator=(const Command&) = delete;
     Command& operator=(Command&&) = delete;
 };
+
+class BinaryCommand : public Command {
+  public:
+    virtual ~BinaryCommand();
+  protected:
+    void CheckPreconditionsImpl() const override;
+    BinaryCommand() {}
+    BinaryCommand(const BinaryCommand&);
+  private:
+    BinaryCommand(BinaryCommand&&) = delete;
+    BinaryCommand& operator=(const BinaryCommand&) = delete;
+    BinaryCommand& operator=(BinaryCommand&&) = delete;
+
+    // Takes two elements from the stack, applies the binary operation
+    // and returns the result to the stack.
+    void executeImpl() noexcept override;
+
+    // Drops the result and returns the oryginal two numbers to the stack.
+    void undoImpl() noexcept override;
+
+    virtual double binaryOperation(double next, double top) const noexcept = 0;
+
+    double top_;
+    double next_;
+}
+
+
 }  // namespace pdCalc
 
 #endif
