@@ -67,7 +67,25 @@ class BinaryCommand : public Command {
 
     double top_;
     double next_;
-}
+};
+
+class UnaryCommand : public Command {
+  public:
+  virtual ~UnaryCommand() {};
+  UnaryCommand() {};
+
+  private:
+  // Takes one element from the stack, applies the binary operatrion
+  // and returns the result to the stack.
+  void executeImpl() noexcept override;
+
+  // Drops the result and returns the oryginal number to the stack.
+  void undoImpl() noexcept override;
+
+  virtual double unaryOperation(double top) const noexcept = 0;
+
+  double top_;
+};
 
 
 }  // namespace pdCalc
