@@ -44,13 +44,16 @@ class Command
     Command& operator=(Command&&) = delete;
 };
 
-class BinaryCommand : public Command {
+class BinaryCommand : public Command
+{
   public:
     virtual ~BinaryCommand();
+
   protected:
     void CheckPreconditionsImpl() const override;
     BinaryCommand() {}
     BinaryCommand(const BinaryCommand&);
+
   private:
     BinaryCommand(BinaryCommand&&) = delete;
     BinaryCommand& operator=(const BinaryCommand&) = delete;
@@ -69,24 +72,37 @@ class BinaryCommand : public Command {
     double next_;
 };
 
-class UnaryCommand : public Command {
+class UnaryCommand : public Command
+{
   public:
-  virtual ~UnaryCommand() {};
-  UnaryCommand() {};
+    virtual ~UnaryCommand(){};
+    UnaryCommand(){};
 
   private:
-  // Takes one element from the stack, applies the binary operatrion
-  // and returns the result to the stack.
-  void executeImpl() noexcept override;
+    // Takes one element from the stack, applies the binary operatrion
+    // and returns the result to the stack.
+    void executeImpl() noexcept override;
 
-  // Drops the result and returns the oryginal number to the stack.
-  void undoImpl() noexcept override;
+    // Drops the result and returns the oryginal number to the stack.
+    void undoImpl() noexcept override;
 
-  virtual double unaryOperation(double top) const noexcept = 0;
+    virtual double unaryOperation(double top) const noexcept = 0;
 
-  double top_;
+    double top_;
 };
 
+class PluginCommand : public Command
+{
+  public:
+    ~virtual ~PluginCommand();
+
+  private:
+    virtual const char* checkPluginPreconditions() const noexcept = 0;
+    virtual PluginCommand* clonePluginImpl() const = 0;
+
+    void checkPreconditionsImpl() const override final;
+    PluginCommand* cloneImpl() const override final;
+};
 
 }  // namespace pdCalc
 
