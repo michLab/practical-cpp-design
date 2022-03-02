@@ -1,6 +1,8 @@
 #ifndef COMMAND_H_
 #define COMMAND_H_
 
+#include <functional>
+#include <string>
 namespace pdCalc
 {
 class Command
@@ -104,6 +106,42 @@ class PluginCommand : public Command
     PluginCommand* cloneImpl() const override final;
 };
 
+class BinaryCommandAlternative final : public Command
+{
+    using BinaryCommandOp = double(double, double);
+
+  public:
+    BinaryCommandAlternative(const std::string& help,
+                             std::function<BinaryCommandOp> f);
+    ~BinaryCommandAlternative() = default;
+
+  private:
+    BinaryCommandAlternative(BinaryCommandAlternative&&) = delete;
+    BinaryCommandAlternative& operator=(const BinaryCommandAlternative&) =
+        delete;
+    BinaryCommandAlternative& operator=(BinaryCommandAlternative&&) = delete;
+
+    // Throws an exception if the stack size is less than two.
+    void checkPreconditionsImpl() const override;
+
+    BinaryCommandAlternative(const BinaryCommandAlternative&);
+
+    const char* helpMessageImpl() const noexcept override;
+
+    // takes two elements from the stack, applies the binary operation
+    // and returns the result to the stack.
+    void executeImpl() noexcept override;
+
+    // Drops the result and return the original numbers to the stack.
+    void undoImpl() noexcept override;
+
+    BinaryCommandAlternative* cloneImpl() const override;
+
+    double top_;
+    double next_;
+    std::string helpMsg_;
+    std::function<BinaryCommandOp> command_;
+};
 }  // namespace pdCalc
 
 #endif
