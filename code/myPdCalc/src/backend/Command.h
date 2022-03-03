@@ -142,6 +142,19 @@ class BinaryCommandAlternative final : public Command
     std::string helpMsg_;
     std::function<BinaryCommandOp> command_;
 };
+
+inline void CommandDeleter(Command* p) {
+  p->deallocate();
+  }
+
+using CommandPtr = std::unique_ptr<Command, decltype(&CommandDeleter)>;
+
+auto MakeCommandPtr(Args&&... args) {
+  return CommandPtr{new T{std::forward<Args>(args)...}, &CommandDeleter};
+}
+inline auto MakeCommandPtr(Command* p) {
+  return CommandPtr{p, &CommandDeleter}
+}
 }  // namespace pdCalc
 
 #endif
