@@ -3,6 +3,7 @@
 
 #include <functional>
 #include <string>
+#include <memory>
 namespace pdCalc
 {
 class Command
@@ -52,7 +53,7 @@ class BinaryCommand : public Command
     virtual ~BinaryCommand();
 
   protected:
-    void CheckPreconditionsImpl() const override;
+    void checkPreconditionsImpl() const override;
     BinaryCommand() {}
     BinaryCommand(const BinaryCommand&);
 
@@ -78,7 +79,13 @@ class UnaryCommand : public Command
 {
   public:
     virtual ~UnaryCommand(){};
-    UnaryCommand(){};
+
+  protected:
+    // throws an exception if the stack size is less than one
+    void checkPreconditionsImpl() const override;
+
+    UnaryCommand() {}
+    UnaryCommand(const UnaryCommand&);
 
   private:
     // Takes one element from the stack, applies the binary operatrion
@@ -96,7 +103,7 @@ class UnaryCommand : public Command
 class PluginCommand : public Command
 {
   public:
-    ~virtual ~PluginCommand();
+    virtual ~PluginCommand();
 
   private:
     virtual const char* checkPluginPreconditions() const noexcept = 0;
@@ -143,17 +150,19 @@ class BinaryCommandAlternative final : public Command
     std::function<BinaryCommandOp> command_;
 };
 
-inline void CommandDeleter(Command* p) {
-  p->deallocate();
-  }
+inline void CommandDeleter(Command* p) { p->deallocate(); }
 
 using CommandPtr = std::unique_ptr<Command, decltype(&CommandDeleter)>;
 
-auto MakeCommandPtr(Args&&... args) {
-  return CommandPtr{new T{std::forward<Args>(args)...}, &CommandDeleter};
+template<typename T, typename... Args>
+auto MakeCommandPtr(Args&&... args)
+{
+    return CommandPtr{new T{std::forward<Args>(args)...}, &CommandDeleter};
 }
-inline auto MakeCommandPtr(Command* p) {
-  return CommandPtr{p, &CommandDeleter}
+
+inline auto MakeCommandPtr(Command* p)
+{
+    return CommandPtr { p, &CommandDeleter };
 }
 }  // namespace pdCalc
 
