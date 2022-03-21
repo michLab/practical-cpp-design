@@ -51,7 +51,6 @@ UnaryCommand::UnaryCommand(const UnaryCommand& rhs)
 {
 }
 
-
 void UnaryCommand::checkPreconditionsImpl() const
 {
     if (Stack::Instance().size() < 1) {

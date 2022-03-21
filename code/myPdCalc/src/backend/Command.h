@@ -2,8 +2,8 @@
 #define COMMAND_H_
 
 #include <functional>
-#include <string>
 #include <memory>
+#include <string>
 namespace pdCalc
 {
 class Command
@@ -154,7 +154,7 @@ inline void CommandDeleter(Command* p) { p->deallocate(); }
 
 using CommandPtr = std::unique_ptr<Command, decltype(&CommandDeleter)>;
 
-template<typename T, typename... Args>
+template <typename T, typename... Args>
 auto MakeCommandPtr(Args&&... args)
 {
     return CommandPtr{new T{std::forward<Args>(args)...}, &CommandDeleter};
@@ -162,7 +162,7 @@ auto MakeCommandPtr(Args&&... args)
 
 inline auto MakeCommandPtr(Command* p)
 {
-    return CommandPtr { p, &CommandDeleter };
+    return CommandPtr{p, &CommandDeleter};
 }
 }  // namespace pdCalc
 
